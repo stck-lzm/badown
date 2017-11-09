@@ -22,7 +22,8 @@ To download a file:
 `./badown 'http://www107.zippyshare.com/v/dGc4wRuL/file.html'`  
 Those links refer to the same zipped test folder.
 It is unziped for the first link.  
-To download from a file just use a loop for:  
+  
+To download from a file with a lot of urls just use a loop for:  
 `for i in $(cat urls); do ./badown $i && sleep .5; done`  
 
 
