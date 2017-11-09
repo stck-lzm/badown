@@ -63,12 +63,12 @@ function file_downdec {
   cat "$2.tmp" \
     | openssl enc -d -aes-128-ctr -K $3 -iv $4 \
     > "$2"
-  rm "$2".tmp
+  rm -f "$2".tmp
 }
 function file_down {
   wget -O "$2".tmp -q --show-progress "$1"
   mv "$2".tmp "$2"
-  rm "$2".tmp
+  rm -f "$2".tmp
 }
 function mega {
   id=`echo $1 | awk -F '!' '{print $2}'`
