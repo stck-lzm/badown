@@ -1,8 +1,8 @@
-## badown
+# badown
 The name is a short for bash-downloader.
 This little script can download files from mediafire, zippyshare & mega (file and folder).
 
-## dependencies
+### dependencies
 It requires:
 * bash (tested with 4.4), 
 * wget (tested with 1.19), 
@@ -11,5 +11,23 @@ It requires:
 * openssl aes-128-(cbc, ecb & ctr)
 * (coreutils).
 
-## todo
-Add bandwidth control, curl support, more site and resume paused download
+### usage
+To execute the script give it execute access.  
+`chmod +x badown`
+  
+To download a file.  
+`./badown 'https://mega.nz/#F!NogxFaIK!PavsMkUPQSXJ_o5zwCs5Ew'`  
+`./badown 'https://mega.nz/#!RnQFkTYS!rFIJp7MBKxcS-Po8okSSoykR17KpIGV7xcXNZvpx38I'`  
+`./badown 'https://www.mediafire.com/file/jbbbncd27n5mukh/test.zip'`  
+`./badown 'http://www107.zippyshare.com/v/dGc4wRuL/file.html'`  
+Those links refer to the same test folder.
+It is unziped for the first link.
+
+### warning
+For some reason (encryption stuff), I am not able to recover the name of the folder for mega folder links.
+Which means that the tree structure of the folder is not respected.
+But, all the files are downloaded in a folder named megafolder with the UNIX timestamp.
+
+### todo
+Add bandwidth control, curl support, more site and resume paused download.
+Maybe build a shell version.
