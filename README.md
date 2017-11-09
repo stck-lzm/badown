@@ -15,13 +15,16 @@ It requires:
 To execute the script give it execute access.  
 `chmod +x badown`
   
-To download a file.  
+To download a file:  
 `./badown 'https://mega.nz/#F!NogxFaIK!PavsMkUPQSXJ_o5zwCs5Ew'`  
 `./badown 'https://mega.nz/#!RnQFkTYS!rFIJp7MBKxcS-Po8okSSoykR17KpIGV7xcXNZvpx38I'`  
 `./badown 'https://www.mediafire.com/file/jbbbncd27n5mukh/test.zip'`  
 `./badown 'http://www107.zippyshare.com/v/dGc4wRuL/file.html'`  
-Those links refer to the same test folder.
-It is unziped for the first link.
+Those links refer to the same zipped test folder.
+It is unziped for the first link.  
+To download from a file just use a loop for:  
+`for i in $(cat urls); do ./badown $i && sleep .5; done`  
+
 
 ### warning
 For some reason (encryption stuff), I am not able to recover the name of the folder for mega folder links.
