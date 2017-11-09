@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $# != 1 ]]; then 
-  echo "usage: badown <url>"
+  echo "usage: badown 'url'"
   exit 1
 fi
 function url_str {
@@ -139,6 +139,7 @@ elif [[ "$1" == *"zippyshare"* ]];then
 elif [[ "$1" == *"mediafire"* ]];then
   mediafire "$1"
 else
-  echo "usage: badown <url>"
+  echo "usage: badown 'url'"
+  echo "  the url must be from mega, zippyshare or mediafire."
   exit 1
 fi
