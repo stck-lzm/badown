@@ -1,7 +1,8 @@
 # badown
 The name is a short for bash-downloader.
-This little script can download files from mediafire, zippyshare & mega (file & folder).
-It now support bandwidth control with the option, `-s 70K` or `--speed 1M`.
+This script can download files from mediafire, zippyshare & mega (file & folder).
+It fully support folder download on mega.
+Futhermore, you can control the bandwidth with the option, `-s 70K` or `--speed 1M`.
 
 ### dependencies
 It requires:
