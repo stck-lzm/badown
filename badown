@@ -150,7 +150,7 @@ else
 fi
 }
 function showhelp {
-        echo -e "badown 0.2"
+        echo -e "badown 0.3"
         echo -e "bash downloader for hostsites like mega, mediafire and zippyshare."
         echo -e "badown [OPTION] ['URL']"
         echo -e "\tOptions:"
