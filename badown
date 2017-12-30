@@ -66,11 +66,22 @@ function file_down {
   mv "$2".tmp "$2"
   rm -f "$2".tmp
 }
+function tree_gen {
+  local i=0
+  while [[ $i -lt $2 ]] && ! [[ ${names[i]} == "$1" ]]; do
+    let i++
+  done
+  if ! [[ $i == $2 ]]; then
+    tree_gen ${parents[i]} $2
+    meta_dec_key "$(key_solver $(key_dec $(size ${keys[i]})))"
+    file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $(url_str ${attrs[i]})))")"
+    path=$path/$file_name
+  fi
+}
 function mega {
   id=`echo $1 | awk -F '!' '{print $2}'`
   key=`echo $1 | awk -F '!' '{print $3}'`
   fld=`echo $1 | awk -F '!' '{print $1}'`
-
   if [ "${fld: -1}" == "F" ];then
     json_req '[{"a":"f","c":1,"ca":1,"r":1}]' "?id=&n=$id" > .badown.tmp
     if [[ $(file .badown.tmp) == *"gzip"* ]]; then response1=$(cat .badown.tmp | gunzip); else response1=$(cat .badown.tmp); fi
@@ -79,21 +90,19 @@ function mega {
     types=($(json_post 't' $response1 ))
     attrs=($(json_post 'a' $response1 ))
     sizes=($(json_post 's' $response1 ))
-    j=0
-    time=$(date +%s)
-    mkdir "megafolder$time"
-    ovallsize=0; downsize=0
-    for i in $(seq 0 $((${#sizes[@]}-1)));do ((ovallsize+=${sizes[i]}));done
+    parents=($(json_post 'p' $response1 ))
     for i in $(seq 0 $((${#types[@]}-1)));do 
-      if [ ${types[i]} == 0 ];then 
+      unset path
+      tree_gen ${parents[i]} $((${#types[@]}-1))
+      meta_dec_key "$(key_solver $(key_dec $(size ${keys[i]})))"
+      file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $(url_str ${attrs[i]})))")"
+      path=$path/$file_name
+      if [ ${types[i]} == 1 ];then
+	mkdir $PWD$path
+      elif [ ${types[i]} == 0 ];then
 	file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
-	meta_dec_key "$(key_solver $(key_dec $(size ${keys[i]})))"
-	file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $(url_str ${attrs[i]})))")"
 	file_downdec $file_url "$file_name" $meta_key $meta_iv 
-	((downsize+=${sizes[j]}))
-	echo $j'/'$((${#sizes[@]} - 1))' - '$downsize'/'$ovallsize
-	((j++))
-	mv  "$file_name" "$PWD/megafolder$time"/
+	mv  "$file_name" $PWD$path
       fi
     done
   elif [ "${fld: -1}" == "#" ];then
