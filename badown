@@ -98,11 +98,11 @@ function mega {
       file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $(url_str ${attrs[i]})))")"
       path=$path/$file_name
       if [ ${types[i]} == 1 ];then
-	mkdir $PWD$path
+	mkdir "$PWD$path"
       elif [ ${types[i]} == 0 ];then
 	file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
 	file_downdec $file_url "$file_name" $meta_key $meta_iv 
-	mv  "$file_name" $PWD$path
+	mv  "$file_name" "$PWD$path"
       fi
     done
   elif [ "${fld: -1}" == "#" ];then
