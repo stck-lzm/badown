@@ -29,5 +29,4 @@ To download from a file with a lot of urls just use a loop for:
 `for i in $(cat urls); do ./badown $i && sleep .5; done`  
 
 ### todo
-Add curl support, more site and resume paused download.
-Maybe build a shell version.
+Add more sites (if asked) and resume paused download.
