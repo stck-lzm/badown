@@ -133,10 +133,10 @@ function zippyshare {
 }
 function mediafire {
   file_url=$(wget -q -O- $1 \
-    | grep -C 3 'class="download_link"' \
-    | grep 'kNO = ' \
-    | awk -F'"' '{print $2}')
-  file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
+     | awk -F'href="|"  |">|</' '{for(i=2;i<=NF;i=i+4) {if ($i~"OnDownload") print $i}}' \
+     | awk -F"'" '{print $2}')
+  file_name=$(printf '%b' "$(echo $file_url \
+    | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
   file_down $file_url "$file_name"
 }
 function switch {
