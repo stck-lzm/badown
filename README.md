@@ -21,7 +21,7 @@ To download a file:
 `./badown 'https://mega.nz/#F!NogxFaIK!PavsMkUPQSXJ_o5zwCs5Ew'`  
 `./badown 'https://mega.nz/#!RnQFkTYS!rFIJp7MBKxcS-Po8okSSoykR17KpIGV7xcXNZvpx38I'`  
 `./badown 'https://www.mediafire.com/file/jbbbncd27n5mukh/test.zip'`  
-`./badown 'http://www49.zippyshare.com/v/OSZ5J7so/file.html'`  
+`./badown 'https://www45.zippyshare.com/v/FGNmgtr8/file.html'`  
 Those links refer to the same zipped test folder.
 It is unziped for the first link.  
   
