@@ -102,7 +102,7 @@ function mega {
       elif [ ${types[i]} == 0 ];then
 	file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
 	file_downdec $file_url "$file_name" $meta_key $meta_iv 
-	sleep .5;mv  "$file_name" "$PWD$path"
+	sleep .5;mv "$file_name" "$PWD$path"
       fi
     done
   elif [ "${fld: -1}" == "#" ];then
@@ -120,13 +120,13 @@ function zippyshare {
   var1=( $(cat .badown.tmp \
     | grep -B1 dlbutton \
     | grep href \
-    | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\//) {print $i}}}') )
+    | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\// && $i !~ /+/) {print $i}}}') )
   var2=$(cat .badown.tmp \
     | grep dlbutton \
     | awk -F'=' '{print $NF}' \
     | awk -F'(' '{print $2}' \
-    | awk -F')' '{print $1}') 
-  file_url=$(echo $var0 ${var1[0]} $(( $var2 )) ${var1[1]} | tr -d ' ')
+    | awk -F'+' '{print $1}') 
+  file_url=$(echo $var0 ${var1[0]} $(($var2 + 11)) ${var1[1]} | tr -d ' ')
   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
   rm .badown.tmp
   file_down $file_url "$file_name"
@@ -136,7 +136,7 @@ function mediafire {
      | awk -F'href="|"  |">|</' '{for(i=2;i<=NF;i=i+4) {if ($i~"OnDownload") print $i}}' \
      | awk -F"'" '{print $2}')
   file_name=$(printf '%b' "$(echo $file_url \
-    | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
+     | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
   file_down $file_url "$file_name"
 }
 function switch {
