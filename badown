@@ -101,6 +101,10 @@ function mega {
 	sleep .5;mkdir -p "$PWD$path"
       elif [ ${types[i]} == 0 ];then
 	file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
+	#echo $file_url
+	#echo $file_name
+	#echo $meta_key
+	#echo $meta_iv
 	file_downdec $file_url "$file_name" $meta_key $meta_iv 
 	sleep .5;mv "$file_name" "$PWD$path"
       fi
@@ -121,12 +125,13 @@ function zippyshare {
     | grep -B1 dlbutton \
     | grep href \
     | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\// && $i !~ /+/) {print $i}}}') )
-  var2=$(cat .badown.tmp \
-    | grep dlbutton \
+  var2=( $(cat .badown.tmp  \
+    | grep dlbutton -B2 \
+    | grep var \
     | awk -F'=' '{print $NF}' \
-    | awk -F'(' '{print $2}' \
-    | awk -F'+' '{print $1}') 
-  file_url=$(echo $var0 ${var1[0]} $(($var2 + 11)) ${var1[1]} | tr -d ' ')
+    | cut -d ";" -f 1) )
+  var2=( ${var2[@]} $(echo "${var2[0]}/3" | bc) $((${var2[0]}%${var2[1]})) )
+  file_url=$(echo $var0 ${var1[0]} $((${var2[2]}+${var2[3]})) ${var1[1]} | tr -d ' ')
   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
   rm .badown.tmp
   file_down $file_url "$file_name"
