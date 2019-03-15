@@ -30,4 +30,5 @@ To download from a file with a lot of urls just use a loop for:
 `for i in $(cat urls); do ./badown $i && sleep .5; done`  
 
 ### todo
-Add more sites and resume paused download.
+Add more sites and resume paused download.  
+Make function for error handling
