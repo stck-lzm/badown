@@ -31,5 +31,5 @@ To download from a file with a lot of urls just use a loop for:
 
 ### todo
 Add more sites and resume paused download.  
-Make function for error handling
-Add proxy support, else as an option or as a function with automatic grabber
+Make function for error handling.  
+Add proxy support, else as an option or as a function with automatic grabber.  
