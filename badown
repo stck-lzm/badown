@@ -78,13 +78,17 @@ function tree_gen {
       path=$path/$file_name
    fi
 }
+function error {
+	echo -e "\033[31merror\e[0m: $1" 1>&2
+	exit 1
+}
 function mega {
    id=`echo $1 | awk -F '!' '{print $2}'`
    key=`echo $1 | awk -F '!' '{print $3}'`
    fld=`echo $1 | awk -F '!' '{print $1}'`
    if [ "${fld: -1}" == "F" ];then
       json_req '[{"a":"f","c":1,"ca":1,"r":1}]' "?id=&n=$id" > .badown.tmp
-      if [[ $(file .badown.tmp) == *"gzip"* ]]; then response1=$(cat .badown.tmp | gunzip); else response1=$(cat .badown.tmp); fi
+      [[ $(file .badown.tmp) == *"gzip"* ]] && response1=$(cat .badown.tmp | gunzip) || response1=$(cat .badown.tmp)
       keys=($(json_post 'k' $response1 | awk -F':' '{print $2}'))
       names=($(json_post 'h' $response1 ))
       types=($(json_post 't' $response1 ))
@@ -124,15 +128,17 @@ function zippyshare {
    var1=( $(cat .badown.tmp \
       | grep -B1 dlbutton \
       | grep href \
-      | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\// && $i !~ /+/) {print $i}}}') )
+      | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\//) {print $i}}}') )
+   [ -z "$var1" ] &&  error "File does not exist here"
    var2=( $(cat .badown.tmp  \
-      | grep dlbutton -B2 \
+      | grep dlbutton -B10 \
       | grep var \
       | awk -F'=' '{print $NF}' \
       | cut -d ";" -f 1) )
-   var2=( ${var2[@]} $(echo "${var2[0]}/3" | bc) $((${var2[0]}%${var2[1]})) )
-   file_url=$(echo $var0 ${var1[0]} $((${var2[2]}+${var2[3]})) ${var1[1]} | tr -d ' ')
-   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
+   [ -z "$var2" ] &&  error "Something happened, contact me @github -stck_lzm"
+   for i in $(seq 0 $((${#var2[@]}-1)));do var2[i]=$((${var2[i]})); done
+   file_url=$(echo $var0 ${var1[0]} $((${var2[0]}*${var2[1]}+${var2[2]}+${var2[4]})) ${var1[1]} | tr -d ' ')
+   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x",$NF);gsub("\+"," ",$NF);print $NF}')")
    rm .badown.tmp
    file_down $file_url "$file_name"
 }
@@ -156,12 +162,14 @@ function switch {
    fi
 }
 function showhelp {
-   echo -e "badown 0.3"
+   echo -e "badown 0.4"
    echo -e "bash downloader for hostsites like mega, mediafire and zippyshare."
    echo -e "badown [OPTION] ['URL']"
    echo -e "\tOptions:"
    echo -e "\t-s,\t--speed SPEED         Download speed limit (integer values: 500B, 70K, 2M)."
    echo -e "\t-h,\t--help  	      Display this help."
+   echo -e ""
+   echo -e "if you find a bug, contact me @github -stck_lzm"
 }
 TEMP=$(getopt -o "s:h"  --long "speed:,help" -n badown -- "$@")
 [ $? -eq 0 ] || {

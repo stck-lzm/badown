@@ -31,5 +31,5 @@ To download from a file with a lot of urls just use a loop for:
 
 ### todo
 Add more sites and resume paused download.  
-Make function for error handling.  
+Extend mega function with specific file in folder download.
 Add proxy support, else as an option or as a function with automatic grabber.  
