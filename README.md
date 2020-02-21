@@ -31,5 +31,9 @@ To download from a file with a lot of urls just use a loop for:
 
 ### todo
 Add more sites and resume paused download.  
-Extend mega function with specific file in folder download.
+Extend mega function with specific file in folder download.  
 Add proxy support, else as an option or as a function with automatic grabber.  
+Find a more stable solution for Zippyshare,   
+(there is 5-ish line of code in js that needs to be interpreted in order to produce a number.  
+This number protect the download link and need to be computed.  
+The formula to get this number changes quite often.)
