@@ -131,14 +131,13 @@ function zippyshare {
       | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\//) {print $i}}}') )
    [ -z "$var1" ] &&  error "File does not exist here"
    var2=( $(cat .badown.tmp  \
-      | grep dlbutton -B10 \
-      | grep var \
-      | awk -F'=' '{print $NF}' \
-      | cut -d ";" -f 1) )
-   [ -z "$var2" ] &&  error "Something happened, contact me @github -stck_lzm"
-   for i in $(seq 0 $((${#var2[@]}-1)));do var2[i]=$((${var2[i]})); done
-   file_url=$(echo $var0 ${var1[0]} $((${var2[0]}*${var2[1]}+${var2[2]}+${var2[4]})) ${var1[1]} | tr -d ' ')
-   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x",$NF);gsub("\+"," ",$NF);print $NF}')")
+      | grep dlbutton -B1 \
+      | grep href \
+      | grep + \
+      | awk -F'(' '{print $3}'\
+      | awk -F')' '{print $1}'))
+   file_url=$(echo $var0 ${var1[0]} $((${var2[@]})) ${var1[1]} | tr -d ' ')
+   file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
    rm .badown.tmp
    file_down $file_url "$file_name"
 }
