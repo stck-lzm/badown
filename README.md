@@ -19,7 +19,9 @@ To execute the script give it execute right.
   
 To download a file:  
 `./badown 'https://mega.nz/#F!NogxFaIK!PavsMkUPQSXJ_o5zwCs5Ew'`  
+`./badown 'https://mega.nz/folder/NogxFaIK#PavsMkUPQSXJ_o5zwCs5Ew'`  
 `./badown 'https://mega.nz/#!RnQFkTYS!rFIJp7MBKxcS-Po8okSSoykR17KpIGV7xcXNZvpx38I'`  
+`./badown 'https://mega.nz/file/RnQFkTYS#rFIJp7MBKxcS-Po8okSSoykR17KpIGV7xcXNZvpx38I'`  
 `./badown 'https://www.mediafire.com/file/jbbbncd27n5mukh/test.zip'`  
 `./badown 'https://www45.zippyshare.com/v/FGNmgtr8/file.html'`  
 It is unziped for the first link.  
@@ -30,10 +32,10 @@ To download from a file with a lot of urls just use a loop for:
 `for i in $(cat urls); do ./badown $i && sleep .5; done`  
 
 ### todo
-Add more sites and resume paused download.  
-Extend mega function with specific file in folder download.  
-Add proxy support, else as an option or as a function with automatic grabber.  
-Find a more stable solution for Zippyshare,   
+- Find a more stable solution for Zippyshare,   
 (there is 5-ish line of code in js that needs to be interpreted in order to produce a number.  
-This number protect the download link and need to be computed.  
-The formula to get this number changes quite often.)
+this number protect the download link and need to be computed.  
+the formula to get this number changes quite often.)
+- Add more sites and resume paused download.  
+- Extend mega function with specific file in folder download.  
+- Add proxy support, else as an option or as a function with automatic grabber.  

@@ -54,6 +54,17 @@ function meta_dec {
       | tr -d '\0' \
       2> /dev/null
 }
+function mega_link_vars {
+   if [[ "$1" ==  *"/#"* ]]; then
+      id=`echo $1 | awk -F'!' '{print $2}'`
+      key=`echo $1 | awk -F'!' '{print $3}'`
+      fld=`echo $1 | awk -F'!' '{print $1}'`
+   else
+      fld=`echo $1 | awk '{gsub(/[^\/]*$/,"");print}'`
+      id=`echo $1 | awk -F'/' '{print $NF}' | awk -F# '{print $1}'`
+      key=`echo $1 | awk -F'/' '{print $NF}' | awk -F# '{print $2}'`
+   fi
+}
 function file_downdec {
    wget -O "$2".tmp  $speed -q --show-progress "$1" 
    cat "$2.tmp" \
@@ -83,10 +94,8 @@ function error {
 	exit 1
 }
 function mega {
-   id=`echo $1 | awk -F '!' '{print $2}'`
-   key=`echo $1 | awk -F '!' '{print $3}'`
-   fld=`echo $1 | awk -F '!' '{print $1}'`
-   if [ "${fld: -1}" == "F" ];then
+   mega_link_vars $1
+   if [ "${fld: -1}" == "F" ] || [[ "$fld" == *"folder"* ]];then
       json_req '[{"a":"f","c":1,"ca":1,"r":1}]' "?id=&n=$id" > .badown.tmp
       [[ $(file .badown.tmp) == *"gzip"* ]] && response1=$(cat .badown.tmp | gunzip) || response1=$(cat .badown.tmp)
       keys=($(json_post 'k' $response1 | awk -F':' '{print $2}'))
@@ -113,7 +122,7 @@ function mega {
 	    sleep .5;mv "$file_name" "$PWD$path"
 	 fi
       done
-   elif [ "${fld: -1}" == "#" ];then
+   elif [ "${fld: -1}" == "#" ] || [[ "$fld" == *"file"* ]];then
       meta_dec_key $(key_solver $(url_str $key))
       name_key=$(url_str $(json_post 'at' $(json_req "[{\"a\":\"g\", \"p\":\"$id\"}]" '?id=&ak=')))
       file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $name_key))")"
