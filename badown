@@ -75,7 +75,6 @@ function file_downdec {
 function file_down {
    wget -O "$2".tmp $speed -q --show-progress "$1"
    mv "$2".tmp "$2"
-   rm -f "$2".tmp
 }
 function tree_gen {
    local i=0
@@ -114,10 +113,6 @@ function mega {
 	    sleep .5;mkdir -p "$PWD$path"
 	 elif [ ${types[i]} == 0 ];then
 	    file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
-	    #echo $file_url
-	    #echo $file_name
-	    #echo $meta_key
-	    #echo $meta_iv
 	    file_downdec $file_url "$file_name" $meta_key $meta_iv 
 	    sleep .5;mv "$file_name" "$PWD$path"
 	 fi
@@ -129,6 +124,7 @@ function mega {
       file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"p\":\"$id\"}]" '?'))
       file_downdec $file_url "$file_name" $meta_key $meta_iv 
    fi
+   rm .badown.tmp
 }
 function zippyshare { 
    wget -q -O .badown.tmp $1
@@ -141,11 +137,10 @@ function zippyshare {
    [ -z "$var1" ] &&  error "File does not exist here"
    var2=( $(cat .badown.tmp  \
       | grep dlbutton -B1 \
-      | grep href \
-      | grep + \
-      | awk -F'(' '{print $3}'\
-      | awk -F')' '{print $1}'))
-   file_url=$(echo $var0 ${var1[0]} $((${var2[@]})) ${var1[1]} | tr -d ' ')
+      | grep 'var a' \
+      | sed 's/[^0-9]//g' \
+      ))
+   file_url=$(echo $var0 ${var1[0]} $(echo 3+$var2^3 | bc) ${var1[1]} | tr -d ' ')
    file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
    rm .badown.tmp
    file_down $file_url "$file_name"
@@ -194,4 +189,3 @@ while true; do
    esac
 done
 switch $1
-exit 1
