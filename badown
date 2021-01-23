@@ -109,11 +109,15 @@ function mega {
 	 meta_dec_key "$(key_solver $(key_dec $(size ${keys[i]})))"
 	 file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $(url_str ${attrs[i]})))")"
 	 path=$path/$file_name
+	 #echo -e "===\n${keys[i]}\n${names[i]}\n${types[i]}\n${attrs[i]}\n${sizes[i]}\n${parents[i]}\n"
+	 #hint if specific folder is specified in names and parents hold value
+	 #probably modify the init phase of mega function to carry new argument of specific folder to download
+	 #maybe add if condition to test how path relate to folder we want to download
 	 if [ ${types[i]} == 1 ];then
 	    sleep .5;mkdir -p "$PWD$path"
 	 elif [ ${types[i]} == 0 ];then
 	    file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
-	    file_downdec $file_url "$file_name" $meta_key $meta_iv 
+	    #file_downdec $file_url "$file_name" $meta_key $meta_iv 
 	    sleep .5;mv "$file_name" "$PWD$path"
 	 fi
       done
@@ -122,7 +126,7 @@ function mega {
       name_key=$(url_str $(json_post 'at' $(json_req "[{\"a\":\"g\", \"p\":\"$id\"}]" '?id=&ak=')))
       file_name="$(json_post 'n' "$(meta_dec $meta_key $(size $name_key))")"
       file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"p\":\"$id\"}]" '?'))
-      file_downdec $file_url "$file_name" $meta_key $meta_iv 
+      #file_downdec $file_url "$file_name" $meta_key $meta_iv 
    fi
    rm .badown.tmp
 }
