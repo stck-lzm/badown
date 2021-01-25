@@ -59,6 +59,11 @@ function mega_link_vars {
       id=`echo $1 | awk -F'!' '{print $2}'`
       key=`echo $1 | awk -F'!' '{print $3}'`
       fld=`echo $1 | awk -F'!' '{print $1}'`
+   elif [[ "$1" == *"/folder"*"/file"* ]]; then
+      fld=`echo $1 | awk '{gsub(/(folder\/).*/,"folder/");print}'`
+      id=`echo $1 | awk -F'/' '{print $(NF-2)}' | awk -F# '{print $1}'`
+      key=`echo $1 | awk -F'/' '{print $(NF-2)}' | awk -F# '{print $2}'`
+      fid=`echo $1 | awk -F'/' '{print $NF}'`
    else
       fld=`echo $1 | awk '{gsub(/[^\/]*$/,"");print}'`
       id=`echo $1 | awk -F'/' '{print $NF}' | awk -F# '{print $1}'`
@@ -66,6 +71,10 @@ function mega_link_vars {
    fi
 }
 function file_downdec {
+   echo $1
+   echo $2
+   echo $3
+   echo $4
    wget -O "$2".tmp  $speed -q --show-progress "$1" 
    cat "$2.tmp" \
       | openssl enc -d -aes-128-ctr -K $3 -iv $4 \
@@ -113,12 +122,18 @@ function mega {
 	 #hint if specific folder is specified in names and parents hold value
 	 #probably modify the init phase of mega function to carry new argument of specific folder to download
 	 #maybe add if condition to test how path relate to folder we want to download
-	 if [ ${types[i]} == 1 ];then
-	    sleep .5;mkdir -p "$PWD$path"
-	 elif [ ${types[i]} == 0 ];then
-	    file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
-	    file_downdec $file_url "$file_name" $meta_key $meta_iv 
-	    sleep .5;mv "$file_name" "$PWD$path"
+	 if [ -z $fid ]; then
+	    if [ ${types[i]} == 1 ];then
+	       sleep .5;mkdir -p "$PWD$path"
+	    elif [ ${types[i]} == 0 ];then
+	       file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id"))
+	       file_downdec $file_url "$file_name" $meta_key $meta_iv 
+	       sleep .5;mv "$file_name" "$PWD$path"
+	    fi
+	 else
+	    [ $fid == ${names[i]} ] &&\
+	       file_url=$(json_post 'g' $(json_req "[{\"a\":\"g\",\"g\":1,\"n\":\"${names[i]}\"}]" "?id=&n=$id")) &&\
+	       file_downdec $file_url "$file_name" $meta_key $meta_iv
 	 fi
       done
    elif [ "${fld: -1}" == "#" ] || [[ "$fld" == *"file"* ]];then
