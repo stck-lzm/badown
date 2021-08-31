@@ -71,10 +71,6 @@ function mega_link_vars {
    fi
 }
 function file_downdec {
-   echo $1
-   echo $2
-   echo $3
-   echo $4
    wget -O "$2".tmp  $speed -q --show-progress "$1" 
    cat "$2.tmp" \
       | openssl enc -d -aes-128-ctr -K $3 -iv $4 \
@@ -154,13 +150,10 @@ function zippyshare {
       | grep href \
       | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\//) {print $i}}}') )
    [ -z "$var1" ] &&  error "File does not exist here"
-   var2=( $(cat .badown.tmp  \
-      | grep -B1 dlbutton \
-      | grep document \
-      | awk -F= '{print $2}' \
-      | awk -F"[()]" '{print $2}' \
-      ))
-   file_url=$(echo $var0 ${var1[0]} $(echo 3+$var2^3 | bc) ${var1[1]} | tr -d ' ')
+   var2=$(cat file.html \
+      | grep dlbutton\' \
+      | awk -F+ '{print $2" + "$3}')
+   file_url=$(echo $var0 ${var1[0]} $((var2)) ${var1[1]} | tr -d ' ')
    file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
    rm .badown.tmp
    file_down $file_url "$file_name"

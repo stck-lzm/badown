@@ -24,9 +24,7 @@ To download a file:
 `./badown 'https://mega.nz/file/RnQFkTYS#rFIJp7MBKxcS-Po8okSSoykR17KpIGV7xcXNZvpx38I'`  
 `./badown 'https://www.mediafire.com/file/jbbbncd27n5mukh/test.zip'`  
 `./badown 'https://www74.zippyshare.com/v/WjE4KUUF/file.html'`  
-It is unziped for the first link.  
-Those links refer to the same zipped test folder.  
-And might be dead for inactivity, however they will stay here for the syntax.  
+Those links might be dead for inactivity, however they will stay here for the syntax.  
   
 To download from a file with a lot of urls just use a loop for:  
 `for i in $(cat urls); do ./badown $i && sleep .5; done`  
