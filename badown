@@ -146,14 +146,14 @@ function zippyshare {
    var0=$(echo $1 \
       | awk -F".com" '{print $1".com"}')
    var1=( $(cat .badown.tmp \
-      | grep -B1 dlbutton \
-      | grep href \
-      | awk -F'"' '{for(i = 1; i <= NF; i++) {if ($i ~ /\//) {print $i}}}') )
-   [ -z "$var1" ] &&  error "File does not exist here"
-   var2=$(cat file.html \
-      | grep dlbutton\' \
-      | awk -F+ '{print $2" + "$3}')
-   file_url=$(echo $var0 ${var1[0]} $((var2)) ${var1[1]} | tr -d ' ')
+     | grep -C10 dlbutton \
+     | grep -C6 '+' \
+     | sed -n '/function*/,$p' \
+     | tail -n +2 | sed '/href/q' \
+     | sed -r 's/document.getElementById[(]'\''dlbutton'\''[)].//g' \
+     | sed -e '$a\console.log(href);' \
+     | nodejs ) )
+   file_url=$(echo $var0 $var1 | tr -d ' ')
    file_name=$(printf '%b' "$(echo $file_url | awk -F'/' '{gsub("%","\\x");gsub("+"," ");print $NF}')")
    rm .badown.tmp
    file_down $file_url "$file_name"
