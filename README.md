@@ -11,6 +11,7 @@ It requires:
 * gzip (tested with 1.8),
 * awk  (tested with 4.1),
 * openssl aes-128-(cbc, ecb & ctr)
+* nodejs (tested with 12.22)
 * (coreutils).
 
 ### usage
@@ -30,10 +31,6 @@ To download from a file with a lot of urls just use a loop for:
 `for i in $(cat urls); do ./badown $i && sleep .5; done`  
 
 ### todo
-- Find a more stable solution for Zippyshare,   
-(there is 5-ish line of code in js that needs to be interpreted in order to produce a number.  
-this number protect the download link and need to be computed.  
-the formula to get this number changes quite often.)
 - Add more sites and resume paused download.  
 - Extend mega function with specific file in folder download.  
 - Add proxy support, else as an option or as a function with automatic grabber.  
